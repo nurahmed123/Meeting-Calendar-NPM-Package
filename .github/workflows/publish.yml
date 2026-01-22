@@ -1,0 +1,42 @@
+name: Publish Package
+
+on:
+  release:
+    types: [created]
+  # Manual trigger for testing
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # Required for Provenance via Trusted Publishing
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          # default-registry-url is not strictly needed for trusted publishing if configured correctly,
+          # but helpful if fallback to token is needed.
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install Dependencies
+        run: npm ci
+        working-directory: packages/meeting-calendar
+
+      - name: Build Package
+        run: npm run build
+        working-directory: packages/meeting-calendar
+
+      - name: Publish to NPM
+        # Provenance generates signed attestations for the build (Trusted Publishing)
+        run: npm publish --provenance --access public
+        working-directory: packages/meeting-calendar
+        env:
+          # If utilizing Trusted Publishing with OIDC, NODE_AUTH_TOKEN might not be strictly required
+          # in the env if using `npm publish` directly in some setups, but typically
+          # you still provide a token or rely on the OIDC exchange.
+          # For Trusted Publishing, NPM automatically exchanges the OIDC token.
+          # We just need to ensure the permission `id-token: write` is set.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
