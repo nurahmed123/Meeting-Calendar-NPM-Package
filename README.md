@@ -113,7 +113,7 @@ export default function BookPage() {
 
 | Property | Attribute (HTML) | Type | Required | Description |
 | :--- | :--- | :--- | :--- | :--- |
-| `username` | `username` | `string` | ✅ Yes | Your unique Arionys profile username (e.g., `john_doe`). |
+| `username` | `username` | `string` | ✅ Yes | Your unique Arionys profile username. Get it at [Meeting Management Portal](https://calendar.arionys.com). |
 | `style` | `style` | `CSSProperties` | ❌ No | Inline styles to control height, width, border, etc. |
 | `className` | `class` | `string` | ❌ No | CSS class names for styling with Tailwind or custom CSS. |
 | `title` | `title` | `string` | ❌ No | Iframe title for accessibility (a11y). |
