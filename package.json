@@ -1,6 +1,6 @@
 {
     "name": "meeting-calendar",
-    "version": "1.2.6",
+    "version": "1.2.7",
     "description": "A React component to embed Arionys Meeting Calendar booking page",
     "main": "./dist/index.js",
     "module": "./dist/index.js",
@@ -17,6 +17,7 @@
         "scheduling",
         "arionys",
         "meeting-calendar",
+        "meeting scheduler",
         "Md Nur Ahmad"
     ],
     "author": "Arionys",

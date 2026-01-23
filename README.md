@@ -7,6 +7,8 @@
 
 Turn your website into a booking engine. Allow clients to schedule meetings, appointments, and consultations directly within your application UI without redirecting them to external pages.
 
+> **Get your username and manage your meetings at [Meeting Management Portal](https://calendar.arionys.com).**
+
 ## 🚀 Key Features
 
 - **⚡ Zero Configuration**: Plug and play integration with just a username.
