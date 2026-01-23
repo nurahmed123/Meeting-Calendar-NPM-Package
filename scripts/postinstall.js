@@ -19,18 +19,10 @@ function openUrl(url) {
 }
 
 console.log('\n\x1b[36m%s\x1b[0m', '>>> Thank you for installing Meeting Calendar!');
-console.log('\x1b[36m%s\x1b[0m', '>>> Press ENTER to finish the download and login at Meeting Management Portal...');
+console.log('\x1b[36m%s\x1b[0m', '>>> Opening Meeting Management Portal in your browser...');
 
-// Set a timeout to exit if no input is received (prevent hanging in CI/non-interactive)
-const timeout = setTimeout(() => {
-    console.log('\n(Proceeding without input...)');
-    process.exit(0);
-}, 15000);
-
-process.stdin.setEncoding('utf8');
-process.stdin.on('data', () => {
-    clearTimeout(timeout);
+// Open the URL automatically after a brief pause to ensure the log is seen
+setTimeout(() => {
     openUrl('https://calendar.arionys.com/sign-in');
-    console.log('Opening browser...');
     process.exit(0);
-});
+}, 2000);
