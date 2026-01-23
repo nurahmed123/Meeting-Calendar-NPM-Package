@@ -15,6 +15,7 @@ function openUrl(url) {
         if (error) {
             console.error('Failed to open URL:', error);
         }
+        process.exit(0);
     });
 }
 
@@ -24,5 +25,4 @@ console.log('\x1b[36m%s\x1b[0m', '>>> Opening Meeting Management Portal in your 
 // Open the URL automatically after a brief pause to ensure the log is seen
 setTimeout(() => {
     openUrl('https://calendar.arionys.com/sign-in');
-    process.exit(0);
 }, 2000);
