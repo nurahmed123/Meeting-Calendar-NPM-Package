@@ -1,20 +1,28 @@
 import { defineConfig } from "tsup";
 
-export default defineConfig({
-    entry: {
-        index: "src/index.tsx",
-        embed: "src/web-component.tsx", // Separate entry for the web component
+export default defineConfig([
+    // 1. Library Build (for NPM/React apps) - DOES NOT Bundle React
+    {
+        entry: { index: "src/index.tsx" },
+        format: ["cjs", "esm"],
+        dts: true,
+        splitting: false,
+        sourcemap: true,
+        clean: true, // Only clean once or handle carefully
+        external: ["react", "react-dom"], // React is a peer dependency here
     },
-    format: ["cjs", "esm", "iife"], // Add IIFE for browser script tag
-    dts: true, // Generate declaration file (.d.ts)
-    splitting: false,
-    sourcemap: true,
-    clean: true,
-    target: "es2015", // Required for Web Components (HTMLElement extension)
-    // For the IIFE build, we want to bundle React dependencies so it works standalone
-    noExternal: ["react", "react-dom"],
-    globalName: "MeetingCalendar", // Global variable name for IIFE
-    env: {
-        NODE_ENV: "production",
-    },
-});
+    // 2. Web Component Build (for static HTML) - BUNDLES React
+    {
+        entry: { embed: "src/web-component.tsx" },
+        format: ["iife"],
+        splitting: false,
+        sourcemap: true,
+        // clean: false, // Don't wipe the previous build
+        target: "es2015",
+        noExternal: ["react", "react-dom"], // Bundle React for standalone use
+        globalName: "MeetingCalendar",
+        env: {
+            NODE_ENV: "production",
+        },
+    }
+]);
