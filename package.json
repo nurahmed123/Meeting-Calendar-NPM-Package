@@ -15,6 +15,15 @@
         "lint": "eslint src/**",
         "postinstall": "node scripts/postinstall.js"
     },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nurahmed123/Meeting-Calendar-NPM-Package.git",
+        "license": "https://github.com/nurahmed123/Meeting-Calendar-NPM-Package/blob/main/LICENSE"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "homepage": "https://github.com/nurahmed123/Meeting-Calendar-NPM-Package#readme",
     "keywords": [
         "react",
         "calendar",
