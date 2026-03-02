@@ -1,9 +1,15 @@
-name: Publish Package
+name: Publish meeting-calendar to npm
 
 on:
+  # Trigger automatically when pushing to main or master
+  push:
+    branches:
+      - main
+      - master
+  # Trigger when a GitHub Release is created
   release:
     types: [created]
-  # Manual trigger for testing
+  # Allow manual trigger from the GitHub Actions tab
   workflow_dispatch:
 
 jobs:
@@ -11,32 +17,42 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write # Required for Provenance via Trusted Publishing
+      packages: write
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
-          # default-registry-url is not strictly needed for trusted publishing if configured correctly,
-          # but helpful if fallback to token is needed.
+          node-version: '20' # the node version to use
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Install Dependencies
-        run: npm ci
-        working-directory: packages/meeting-calendar
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps --force
 
-      - name: Build Package
+      - name: Build the package
         run: npm run build
-        working-directory: packages/meeting-calendar
 
       - name: Publish to NPM
-        # Provenance generates signed attestations for the build (Trusted Publishing)
-        run: npm publish --provenance --access public
-        working-directory: packages/meeting-calendar
+        run: |
+            npm publish --access public
         env:
-          # If utilizing Trusted Publishing with OIDC, NODE_AUTH_TOKEN might not be strictly required
-          # in the env if using `npm publish` directly in some setups, but typically
-          # you still provide a token or rely on the OIDC exchange.
-          # For Trusted Publishing, NPM automatically exchanges the OIDC token.
-          # We just need to ensure the permission `id-token: write` is set.
+          # This connects the step to the token we'll create in GitHub secrets
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Setup Node.js for GitHub Packages
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Publish to GitHub Packages
+        run: |
+          # GitHub Packages requires the package name to be scoped to the repository owner
+          npm pkg set name="@nurahmed123/Meeting-Calendar-NPM-Package"
+          npm publish
+        env:
+          # The GITHUB_TOKEN is automatically provided by GitHub Actions!
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
